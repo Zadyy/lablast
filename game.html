@@ -2,11 +2,85 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 
 <head>
+<meta content="en-us" http-equiv="Content-Language" />
 <meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<title>Untitled 2</title>
+<title>Game</title>
+<style>
+    body {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .card {
+      width: 137px;
+      height: 209px;
+      margin: 10px;
+      perspective: 1000px;
+    }
+    .card-inner {
+      width: 100%;
+      height: 100%;
+      transform-style: preserve-3d;
+      transition: transform 0.5s;
+    }
+    .face {
+      width: 100%;
+      height: 100%;
+      position: absolute;
+      backface-visibility: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    }
+	.card-inner.flipped {
+      transform: rotateY(180deg);
+    }
+  </style>
 </head>
+<body background="Forestbackground.jpg">
 
-<body>
+<script>
+  const images = [
+    'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg',
+    'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg',
+    'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg'
+  ];
+
+  const inside = [
+  	'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg',
+    'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg',
+    'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg'
+  ]
+  document.addEventListener('DOMContentLoaded', () => {
+    const container = document.body;
+
+    images.forEach((image, index) => {
+      const card = document.createElement('div');
+      card.classList.add('card');
+
+      const cardInner = document.createElement('div');
+      cardInner.classList.add('card-inner');
+
+      const frontFace = document.createElement('div');
+      frontFace.classList.add('face');
+      frontFace.style.backgroundImage = `url(${image})`;
+
+      const backFace = document.createElement('div');
+      backFace.classList.add('face');
+      backFace.style.backgroundImage = `url("carddesign.jpg")`;
+
+      cardInner.appendChild(frontFace);
+      cardInner.appendChild(backFace);
+      card.appendChild(cardInner);
+
+      card.addEventListener('click', () => {
+        cardInner.classList.toggle('flipped');
+      });
+
+      container.appendChild(card);
+    });
+  });
+</script>
 
 </body>
 

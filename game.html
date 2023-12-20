@@ -1,87 +1,125 @@
-﻿<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
-<html xmlns="http://www.w3.org/1999/xhtml">
-
+﻿<!DOCTYPE html>
+<html lang="en">
 <head>
-<meta content="en-us" http-equiv="Content-Language" />
-<meta content="text/html; charset=utf-8" http-equiv="Content-Type" />
-<title>Game</title>
-<style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Memory Card Game</title>
+  <style>
     body {
       display: flex;
-      flex-wrap: wrap;
-      justify-content: center;
-    }
-    .card {
-      width: 137px;
-      height: 209px;
-      margin: 10px;
-      perspective: 1000px;
-    }
-    .card-inner {
-      width: 100%;
-      height: 100%;
-      transform-style: preserve-3d;
-      transition: transform 0.5s;
-    }
-    .face {
-      width: 100%;
-      height: 100%;
-      position: absolute;
-      backface-visibility: hidden;
-      display: flex;
-      justify-content: center;
       align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
     }
-	.card-inner.flipped {
-      transform: rotateY(180deg);
+
+    #game-board {
+      display: grid;
+      grid-template-columns: repeat(4, 100px);
+      grid-template-rows: repeat(3, 100px);
+      gap: 10px;
+    }
+
+    .card {
+      width: 100px;
+      height: 100px;
+      background-color: #ddd;
+      border: 1px solid #aaa;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    .card img {
+      max-width: 100%;
+      max-height: 100%;
     }
   </style>
 </head>
-<body background="Forestbackground.jpg">
+<body>
+  <div id="game-board"></div>
 
-<script>
-  const images = [
-    'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg',
-    'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg',
-    'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg'
-  ];
+  <script>
+    document.addEventListener('DOMContentLoaded', function () {
+      const images = [
+        'image1.jpg',
+        'image2.jpg',
+        'image3.jpg',
+        'image4.jpg',
+        'image5.jpg',
+        'image6.jpg',
+        'image7.jpg',
+        'image8.jpg',
+        'image9.jpg',
+        'image10.jpg',
+        'image11.jpg',
+        'image12.jpg',
+      ];
 
-  const inside = [
-  	'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg',
-    'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg',
-    'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg', 'carddesign.jpg'
-  ]
-  document.addEventListener('DOMContentLoaded', () => {
-    const container = document.body;
+      const gameBoard = document.getElementById('game-board');
+      let flippedCards = [];
+      let locked = false;
 
-    images.forEach((image, index) => {
-      const card = document.createElement('div');
-      card.classList.add('card');
+      function createCard(image) {
+        const card = document.createElement('div');
+        card.classList.add('card');
+        card.innerHTML = `<img src="${image}" alt="Card">`;
+        card.addEventListener('click', function () {
+          if (locked || flippedCards.length === 2) return;
 
-      const cardInner = document.createElement('div');
-      cardInner.classList.add('card-inner');
+          this.classList.add('flipped');
+          flippedCards.push(this);
 
-      const frontFace = document.createElement('div');
-      frontFace.classList.add('face');
-      frontFace.style.backgroundImage = `url(${image})`;
+          if (flippedCards.length === 2) {
+            locked = true;
+            setTimeout(checkMatch, 1000);
+          }
+        });
 
-      const backFace = document.createElement('div');
-      backFace.classList.add('face');
-      backFace.style.backgroundImage = `url("carddesign.jpg")`;
+        return card;
+      }
 
-      cardInner.appendChild(frontFace);
-      cardInner.appendChild(backFace);
-      card.appendChild(cardInner);
+      function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+          const j = Math.floor(Math.random() * (i + 1));
+          [array[i], array[j]] = [array[j], array[i]];
+        }
+      }
 
-      card.addEventListener('click', () => {
-        cardInner.classList.toggle('flipped');
-      });
+      function checkMatch() {
+        const [card1, card2] = flippedCards;
+        const image1 = card1.querySelector('img').src;
+        const image2 = card2.querySelector('img').src;
 
-      container.appendChild(card);
+        if (image1 === image2) {
+          // Match
+          flippedCards = [];
+          locked = false;
+        } else {
+          // No match
+          setTimeout(() => {
+            card1.classList.remove('flipped');
+            card2.classList.remove('flipped');
+            flippedCards = [];
+            locked = false;
+          }, 500);
+        }
+      }
+
+      function initializeGame() {
+        const allImages = [...images, ...images];
+        shuffleArray(allImages);
+
+        allImages.forEach(image => {
+          const card = createCard(image);
+          gameBoard.appendChild(card);
+        });
+      }
+
+      initializeGame();
     });
-  });
-</script>
-
+  </script>
 </body>
-
 </html>

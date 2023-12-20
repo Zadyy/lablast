@@ -74,34 +74,19 @@
 
   <script>
     document.addEventListener('DOMContentLoaded', function () {
-      const images = [
-        'elephant.jpg',
-        'giraffe.jpg',
-        'dog.jpg',
-        'cat.jpg',
-        'duck.jpg',
-        'monkey.jpg',
-        'horse.jpg',
-        'cow.jpg',
-        'parrot.jpg',
-        'dolphin.jpg',
-        'snake.jpg',
-        'penguin.jpg',
-      ];
-
-	  const sounds = [
-        'elephant.mp3',
-        'giraffe.mp3',
-        'dog.mp3',
-        'cat.mp3',
-        'duck.mp3',
-        'monkey.mp3',
-        'horse.mp3',
-        'cow.mp3',
-        'parrot.mp3',
-        'dolphin.mp3',
-        'snake.mp3',
-        'penguin.mp3',
+      const animals = [
+        { image: 'elephant.jpg', sound: 'elephant.mp3'},
+        { image: 'giraffe.jpg', sound: 'giraffe.mp3'},
+        { image: 'dog.jpg', sound: 'dog.mp3'},
+        { image: 'cat.jpg', sound: 'cat.mp3'},
+        { image: 'duck.jpg', sound: 'duck.mp3'},
+        { image: 'monkey.jpg', sound: 'monkey.mp3'},
+        { image: 'horse.jpg', sound: 'horse.mp3'},
+        { image: 'cow.jpg', sound: 'cow.mp3'},
+        { image: 'parrot.jpg', sound: 'parrot.mp3'},
+        { image: 'dolphin.jpg', sound: 'dolphin.mp3'},
+        { image: 'snake.jpg', sound: 'snake.mp3'},
+        { image: 'penguin.jpg', sound: 'penguin.mp3'},
       ];
 
       const gameBoard = document.getElementById('game-board');
@@ -113,7 +98,7 @@
         audio.play();
       }
 
-      function createCard(image, sound) {
+      function createCard(animals) {
         const card = document.createElement('div');
         card.classList.add('card');
         
@@ -123,7 +108,7 @@
 
         const cardFaceFront = document.createElement('div');
         cardFaceFront.classList.add('card-face', 'front');
-        cardFaceFront.innerHTML = `<img src="${image}" alt="Card">`;
+        cardFaceFront.innerHTML = `<img src="${animals.image}" alt="Card">`;
         cardInner.appendChild(cardFaceFront);
 
         const cardFaceBack = document.createElement('div');
@@ -138,7 +123,7 @@
           if (locked || flippedCards.length === 2) return;
 
           cardInner.classList.toggle('flip');
-		  playSound(sound);
+		  playSound(animals.sound);
 
           flippedCards.push(card);
 
@@ -179,13 +164,11 @@
       }
 
       function initializeGame() {
-        const allImages = [...images, ...images];
-		const allSounds = [...sounds, ...sounds];
-        shuffleArray(allImages);
-		shuffleArray(allSounds);
+        const allCardData = [...animals, ...animals];
+        shuffleArray(allCardData);
 
-        allImages.forEach((image, index) => {
-          const card = createCard(image, allSounds[index]);
+        allCardData.forEach(cardInfo => {
+          const card = createCard(cardInfo);
           gameBoard.appendChild(card);
         });
       }

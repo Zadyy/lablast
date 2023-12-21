@@ -67,11 +67,25 @@
       max-width: 100%;
       max-height: 100%;
     }
+
+	#winner-message {
+      display: none;
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background-color: rgba(255, 255, 255, 0.8);
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+    }
   </style>
 </head>
 <body>
-  <div id="game-board"></div>
 
+
+  <div id="game-board"></div>
+  <div id="winner-message">Баяр хүргэе! (∩｀-´)⊃━☆ﾟ.*･｡ﾟ </div>
   <script>
     document.addEventListener('DOMContentLoaded', function () {
       const animals = [
@@ -90,8 +104,10 @@
       ];
 
       const gameBoard = document.getElementById('game-board');
+      const winnerMessage = document.getElementById('winner-message');
       let flippedCards = [];
       let locked = false;
+      let matchesFound = 0;
 
 	  function playSound(soundSrc) {
         const audio = new Audio(soundSrc);
@@ -152,6 +168,10 @@
           // Match
           flippedCards = [];
           locked = false;
+		  matchesFound++;
+		  if (matchesFound === animals.length) {
+			showwinnermessage()
+		  }
         } else {
           // No match
           setTimeout(() => {
@@ -162,6 +182,10 @@
           }, 500);
         }
       }
+
+	  function showwinnermessage() {
+		winnerMessage.style.display = 'block';
+	  }
 
       function initializeGame() {
         const allCardData = [...animals, ...animals];
